@@ -4,7 +4,7 @@ Created on Sat Feb 06 15:07:49 2016
 
 @author: Mike
 """
-import geocoder
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,8 +12,7 @@ import os
 import inspect
 from geopy.distance import vincenty
 from mpl_toolkits.basemap import Basemap
-import weather
-from test_weather import decompose_daily, getCorrCoeff
+
 
 
 def main():
@@ -32,10 +31,10 @@ def main():
     # locate tmy3 meta dat
     fname = 'TMY3_StationsMeta.csv'
     tmy3DataPath = os.path.join(parentDir, 'csv-only',
-                                'meta', fname)
+                                'meta', fname)#
     
 	# Read the data into a pandas dataframe
-	tmy3MetaData = pd.DataFrame.from_csv(tmy3DataPath,index_col=None)   
+    tmy3MetaData = pd.DataFrame.from_csv(tmy3DataPath,index_col=None)   
     metaData = pd.DataFrame.from_csv(metaDataPath,index_col=None)
     
     # get location data
@@ -97,6 +96,9 @@ def main():
     x,y = my_map(uniTmyLng, uniTmyLat)
     my_map.plot(x,y,'yo', markersize=5, label='TMY3 Station')
     plt.legend(frameon=False, loc=0)
+    if not os.path.isdir('../figures'):
+		os.mkdir('../figures')
+		
     plt.savefig('../figures/buildingslocs.png')
     
 
