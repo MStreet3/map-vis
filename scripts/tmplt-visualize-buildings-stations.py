@@ -13,17 +13,39 @@ import os
 import inspect
 from geopy.distance import vincenty
 from mpl_toolkits.basemap import Basemap
-import weather
 
+def findClosestStation(coords1, coords2):
+    '''
+    Function finds the closest value of coords2 to each value in coords1.
+    Inputs:
+    coords1 (iterable) - contains (lat, long) pairs
+    coords2 (iterable) - contains (lat, long) pairs
+    
+    Outputs:
+    closest (list) - contains index value of coords2 that corresponds to the 
+    closest (lat, long) pair for each index in coords1
+    '''
+    
+    # determine the distance from each pair in coords1 to each pair in coords2
+
+    # store the index of coords2 corresponding to the minimum distance     
+    
+    pass
 
 def main():
-'''
-This function plots the locations of 100 commercial buildings across the United States
-and the closest weather station to each building.
-'''
-	#--------------------------
-	# Locate the data files
-	#--------------------------
+    '''
+    This function plots the locations of 100 commercial buildings across 
+    the United States and the closest weather station to each building.
+    
+    A file with (lat, long) data for 100 buildings is located at
+    '../csv-only/meta/all_sites.csv'
+    
+    A file with (lat, long) data for several hundred weather stations is located
+    at '../csv-only/meta/TMY3_StationsMeta.csv'
+    '''
+    #--------------------------------------------------------------------------
+    # Locate the data files
+    #--------------------------------------------------------------------------
     # locate the meta data file
     # get the current file location
 
@@ -32,17 +54,26 @@ and the closest weather station to each building.
     
     # locate the weather data
     
-    # locate tmy3 weather meta data       
-    
-	#---------------------------
-	# determine the relevant weather stations
-	# --------------------------
-	# Write a function that returns the weather station
-	# closest to each building.
+    # locate tmy3 weather meta data
 
-    
-    # plot a map of the united states using Basemap
-	# Plot only the weather stations closest to the buildings.
+    #--------------------------------------------------------------------------       
+    # Read the relevant lat,long data into memory
+    #--------------------------------------------------------------------------
+
+
+
+    #--------------------------------------------------------------------------
+    # determine the relevant weather stations
+    #--------------------------------------------------------------------------
+    # Write a function that returns the weather station
+    # closest to each building.
+
+    #--------------------------------------------------------------------------
+    # Plotting
+    #--------------------------------------------------------------------------
+    # Plot a map of the united states using Basemap.
+    # Plot only the weather stations closest to the buildings.
+    # Save the file in '../figures'
 
     
 

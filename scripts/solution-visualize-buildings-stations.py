@@ -13,7 +13,35 @@ import inspect
 from geopy.distance import vincenty
 from mpl_toolkits.basemap import Basemap
 
-
+def findClosestStation(coords1, coords2):
+    '''
+    Function finds the closest value of coords2 to each value in coords1.
+    Inputs:
+    coords1 (iterable) - contains (lat, long) pairs
+    coords2 (iterable) - contains (lat, long) pairs
+    
+    Outputs:
+    closest (list) - contains tuple of index and value of coords2 that 
+    corresponds to the closest (lat, long) pair for each index in coords1
+    '''
+    
+    closest = []
+	# for each pair of coordinates
+    for firLoc in coords1:
+        dis = []
+        # calculate the distance to each weather station
+        for secLoc in coords2:
+            dis.append(vincenty(firLoc,secLoc).miles)
+		
+        # find the minimum distance and the index
+        # Uses base python, but numpy.argmin is applicable
+        # Check documentation on built-in functions for min and enumerate
+        min_index, min_distance = min(enumerate(dis), key = lambda p: p[1])
+        
+        # store results
+        closest.append((min_index, min_distance))
+    
+    return closest
 
 def main():
     # locate the meta data file
@@ -31,59 +59,53 @@ def main():
     # locate tmy3 meta dat
     fname = 'TMY3_StationsMeta.csv'
     tmy3DataPath = os.path.join(parentDir, 'csv-only',
-                                'meta', fname)#
+                                'meta', fname)
     
 	# Read the data into a pandas dataframe
-    tmy3MetaData = pd.DataFrame.from_csv(tmy3DataPath,index_col=None)   
-    metaData = pd.DataFrame.from_csv(metaDataPath,index_col=None)
+    tmy3MetaData = pd.DataFrame.from_csv(tmy3DataPath, index_col=None)   
+    metaData = pd.DataFrame.from_csv(metaDataPath, index_col=None)
     
     # get location data
     lat = metaData[u'LAT'].values
     lng = metaData[u'LNG'].values
 
     # Find closest TMY3 weather data to each building
-    min_distances = []
-    tmy3_file = []
+
     tmy3_lat = tmy3MetaData['Latitude'].values
     tmy3_lng = tmy3MetaData['Longitude'].values
 	
-	# for each pair of coordinates
-    for pair in zip(lat, lng):
-        dis = []
-		# calculate the distance to each weather station
-        for tmy3_loc in list(zip(tmy3_lat, tmy3_lng)):
-            dis.append(vincenty(pair, tmy3_loc).miles)
-		
-		# find the minimum distance and the index
-        dis = np.array(dis)
-        min_loc = (np.min(dis), np.argmin(dis))
-        
-		# store results
-        min_distances.append(min_loc)
-        tmy3_file.append([tmy3MetaData['Site Name'][min_loc[1]],
-                          tmy3MetaData['State'][min_loc[1]],
-                          tmy3MetaData['USAF'][min_loc[1]]])
+    min_distance = findClosestStation(list(zip(lat,lng)),
+                                      list(zip(tmy3_lat,tmy3_lng)))
     
-	# get unique airport data
-    airport_names = set([x[0] for x in tmy3_file])
+    # store unique attributes of each minimum distance station
+    tmy3SiteNames = [tmy3MetaData['Site Name'][x[0]] for x in min_distance]   
+    
+    # get unique airport data
+    airportUniNames = set(tmy3SiteNames)
+    
+    # get a boolean vector of True/False for each row in the 
+    # original dataframe.
+    
+    # Review the map method of pandas.DataFrame objects for any questions
+    criterion = tmy3MetaData['Site Name'].map(lambda x: x in airportUniNames)
 	
-	# get a boolean vector of True/False for each row in the 
-	# original dataframe.
-    criterion = tmy3MetaData['Site Name'].map(lambda x: x in airport_names)
-	
-	# subset the original dataframe
+    # subset the original dataframe
     unique_tmy3 = tmy3MetaData[criterion]
 	
-	# get the relevant latitudes and longitudes
+    # get the relevant latitudes and longitudes
     uniTmyLng = unique_tmy3['Longitude'].values
     uniTmyLat = unique_tmy3['Latitude'].values        
     
+    # set up plotting scene    
+    fig = plt.figure(figsize=(11,8.5))
+    ax = fig.add_axes([0.05,0.05,0.9,0.9])
+    
     # plot a map of the united states
-    fig = plt.figure(figsize=(8,8))
-    ax = fig.add_axes([0.1,0.1,0.8,0.8])
     my_map = Basemap(projection = 'merc', lat_0=39.8, lon_0=98.6,
-                     resolution='l', area_thresh=1000, llcrnrlon=-125, llcrnrlat=20,
-                     urcrnrlon=-60, urcrnrlat = 50, ax=ax)
+                     resolution='l', area_thresh=1000, llcrnrlon=-125,
+                     llcrnrlat=20, urcrnrlon=-60, urcrnrlat = 50, ax=ax)
+    
+    # Add clarifying identifiers to map
     my_map.drawcoastlines()
     my_map.drawcountries()
     my_map.drawstates()
@@ -91,14 +113,23 @@ def main():
     my_map.drawmapboundary()
     my_map.drawmeridians(np.arange(0, 360, 30))
     my_map.drawparallels(np.arange(-90, 90, 30))
+    
+    # Add building locations to the plot
     x,y = my_map(lng,lat)
     my_map.plot(x, y, 'bo', markersize=8, label='EnerNOC Building')
+    
+    # Add weather station locations to the plot
     x,y = my_map(uniTmyLng, uniTmyLat)
     my_map.plot(x,y,'yo', markersize=5, label='TMY3 Station')
+    
+    # Turn on the legend in best location
     plt.legend(frameon=False, loc=0)
+    
+    # Ensure the required directory exists
     if not os.path.isdir('../figures'):
 		os.mkdir('../figures')
-		
+    
+    # Save figure
     plt.savefig('../figures/buildingslocs.png')
     
 
