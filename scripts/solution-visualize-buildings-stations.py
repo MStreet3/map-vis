@@ -61,7 +61,7 @@ def main():
     tmy3DataPath = os.path.join(parentDir, 'csv-only',
                                 'meta', fname)
     
-	# Read the data into a pandas dataframe
+    # Read the data into a pandas dataframe
     tmy3MetaData = pd.DataFrame.from_csv(tmy3DataPath, index_col=None)   
     metaData = pd.DataFrame.from_csv(metaDataPath, index_col=None)
     
@@ -70,7 +70,6 @@ def main():
     lng = metaData[u'LNG'].values
 
     # Find closest TMY3 weather data to each building
-
     tmy3_lat = tmy3MetaData['Latitude'].values
     tmy3_lng = tmy3MetaData['Longitude'].values
 	
