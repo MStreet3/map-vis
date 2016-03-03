@@ -7,9 +7,10 @@ Created on Sat Feb 06 15:07:49 2016
 
 import pandas as pd
 import numpy as np
+import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
+from matplotlib.legend_handler import HandlerLine2D
 import os
-import inspect
 from geopy.distance import vincenty
 from mpl_toolkits.basemap import Basemap
 
@@ -88,8 +89,61 @@ def main():
 	
     # get the relevant latitudes and longitudes
     uniTmyLng = unique_tmy3['Longitude'].values
-    uniTmyLat = unique_tmy3['Latitude'].values        
+    uniTmyLat = unique_tmy3['Latitude'].values
+
+    #---------------------------------------------------------------------------
+    # Color according to industry.  
+    #---------------------------------------------------------------------------
+    # in this section you need to determine how many unique industries are
+    # represented and to then give each one a unique color.
+    # It may be useful to keep this information in a dictionary that relates
+    # the industry type to the corresponding color.
+    # Search for documentation on color maps in pyplot for more details and
+    # examples.    
+        
     
+    # How many unique industries are there?
+    
+    # for each industry get a color from a diverging color map
+    
+    # relational dictionary
+    
+    #---------------------------------------------------------------------------
+    # Size According to energy use intensity
+    #---------------------------------------------------------------------------
+    '''
+    Next it's time to determine the energy use intensity of each building and
+    plot the size of each point based on this value.  The data for each building
+    is stored in '../csv-only/csv/[SITE_ID].csv' and the 'values' column is in
+    kWh.
+    
+    The energy use intensity is the sum of the energy use at each interval divided
+    by the square footage of the building.  How can we get each of these pieces
+    of information?
+    '''
+    
+    # for each building
+        # get the site_id
+    
+        # get the square footage
+    
+        # define the file path
+    
+        # read in the energy data
+    
+        # calculate the EUI
+    
+        # store the EUI
+
+    
+    # the EUI data has to be scaled in order to show up on the plot.
+    # Create a scaled data set to your liking and see this post on stack overflow
+    # http://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
+   
+  
+    #---------------------------------------------------------------------------
+    # Final plotting of the map
+    #---------------------------------------------------------------------------    
     # set up plotting scene    
     fig = plt.figure(figsize=(11,8.5))
     ax = fig.add_axes([0.05,0.05,0.9,0.9])
@@ -103,28 +157,49 @@ def main():
     my_map.drawcoastlines()
     my_map.drawcountries()
     my_map.drawstates()
-    my_map.fillcontinents(color='gray', alpha=0.65)
+    my_map.fillcontinents(color='gray', alpha=0.0)
     my_map.drawmapboundary()
     my_map.drawmeridians(np.arange(0, 360, 30))
     my_map.drawparallels(np.arange(-90, 90, 30))
     
-    # Add building locations to the plot
-    x,y = my_map(lng,lat)
-    my_map.plot(x, y, 'bo', markersize=8, label='EnerNOC Building')
+    # Add building locations to the plot 
     
+    # convert lat, lng to plot coordinates
+
+    # for each building
+        # plot to my_map.  Color the marker based on the 'INDUSTRY' and 
+        # give marker size based on the EUI calculated for that building.    
+        
     # Add weather station locations to the plot
     x,y = my_map(uniTmyLng, uniTmyLat)
-    my_map.plot(x,y,'yo', markersize=5, label='TMY3 Station')
+    my_map.plot(x,y,'yo', markersize=5, label = 'TMY3 Weather Station')
     
-    # Turn on the legend in best location
-    plt.legend(frameon=False, loc=0)
+    #---------------------------------------------------------------------------    
+    # create legend handles and labels
+    #---------------------------------------------------------------------------
+    '''
+    You most likely will be having legend issues if you labeled each building
+    as you plotted.  Now is where we fix this (or avoid adding labels prior to
+    this section).
+    '''    
+    # get the existing handles
+    # see matplotlib.org/users/legend_guide.html for more details
+    
+    # create custom handles for the building types
+    # see matplotlib.org/users/legend_guide.html for more details
+    
+    
+    # Turn on the legend in best location, adjust legend display for a single point
+    # like the final plot
+    # see matplotlib.org/users/legend_guide.html for more details on HandlerLine2D class
+
     
     # Ensure the required directory exists
     if not os.path.isdir('../../figures'):
 		os.mkdir('../../figures')
     
     # Save figure
-    plt.savefig('../../figures/buildingslocs.png')
+    plt.savefig('../../figures/buildingslocs-session2.png')
     
 
 if __name__ == '__main__':
