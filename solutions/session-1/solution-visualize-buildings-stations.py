@@ -44,21 +44,16 @@ def findClosestStation(coords1, coords2):
     return closest
 
 def main():
-    # locate the meta data file
-    # get the current file location
-    scriptName = inspect.getfile(inspect.currentframe())
-    scriptDir = os.path.abspath(os.path.join(scriptName, os.pardir))
-    parentDir = os.path.dirname(scriptDir)
-    
+   
     # locate the meta data
     fname = 'all_sites.csv'
-    metaDataPath = os.path.join(parentDir, 'csv-only',
+    metaDataPath = os.path.join(os.pardir, os.pardir, 'csv-only',
                                 'meta', fname)
     
     
     # locate tmy3 meta dat
     fname = 'TMY3_StationsMeta.csv'
-    tmy3DataPath = os.path.join(parentDir, 'csv-only',
+    tmy3DataPath = os.path.join(os.pardir, os.pardir,'csv-only',
                                 'meta', fname)
     
     # Read the data into a pandas dataframe
@@ -125,11 +120,11 @@ def main():
     plt.legend(frameon=False, loc=0)
     
     # Ensure the required directory exists
-    if not os.path.isdir('../figures'):
-		os.mkdir('../figures')
+    if not os.path.isdir('../../figures'):
+		os.mkdir('../../figures')
     
     # Save figure
-    plt.savefig('../figures/buildingslocs.png')
+    plt.savefig('../../figures/buildingslocs.png')
     
 
 if __name__ == '__main__':
