@@ -93,38 +93,54 @@ def main():
     uniTmyLat = unique_tmy3['Latitude'].values
 
     #---------------------------------------------------------------------------
-    # Color according to industry.  Size According to energy use intensity
+    # Color according to industry.  
     #---------------------------------------------------------------------------
+    # in this section you need to determine how many unique industries are
+    # represented and to then give each one a unique color.
+    # It may be useful to keep this information in a dictionary that relates
+    # the industry type to the corresponding color.
+    # Search for documentation on color maps in pyplot for more details and
+    # examples.    
+        
     
     # How many unique industries are there?
-    industryNames = set(metaData[u'INDUSTRY'].values)
-    numIndustries = len(industryNames)
     
     # for each industry get a color from a diverging color map
-    cm = plt.get_cmap('Set1')
-    colPts = np.linspace(0.0, 0.5, numIndustries)
     
-    # relational database
-    type_color_map = dict(zip(industryNames, cm(colPts)))
+    # relational dictionary
     
+    #---------------------------------------------------------------------------
+    # Size According to energy use intensity
+    #---------------------------------------------------------------------------
+    '''
+    Next it's time to determine the energy use intensity of each building and
+    plot the size of each point based on this value.  The data for each building
+    is stored in '../csv-only/csv/[SITE_ID].csv' and the 'values' column is in
+    kWh.
+    
+    The energy use intensity is the sum of the energy use at each interval divided
+    by the square footage of the building.  How can we get each of these pieces
+    of information?
+    '''
+    
+    # for each building
+        # get the site_id
+    
+        # get the square footage
+    
+        # define the file path
+    
+        # read in the energy data
+    
+        # calculate the EUI
+    
+        # store the EUI
 
     
-    # point sizes according to energy use intensity
-    buiEUI = []
-    for index in range(len(lng)):
-        site_id = metaData[u'SITE_ID'][index]
-        flrArea = metaData[u'SQ_FT'][index]
-        fpath = os.path.join(os.pardir, os.pardir, 'csv-only', 'csv',
-                             '{}.csv'.format(site_id))
-        bui_energy_kWh = np.genfromtxt(fpath, delimiter=',', skip_header=1, 
-                                       usecols = 2)
-        bui_energy_kBtu = np.sum(bui_energy_kWh*3.412)
-        buiEUI.append(bui_energy_kBtu/flrArea)
-    
-    buiEUI_scaled = [np.interp(kk, [min(buiEUI), np.percentile(buiEUI, 25), 
-                                    np.percentile(buiEUI, 75),
-                                    max(buiEUI)],
-                                    [5, 10, 20, 40]) for kk in buiEUI]    
+    # the EUI data has to be scaled in order to show up on the plot.
+    # Create a scaled data set to your liking and see this post on stack overflow
+    # http://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
+   
   
     #---------------------------------------------------------------------------
     # Final plotting of the map
@@ -147,39 +163,41 @@ def main():
     my_map.drawmeridians(np.arange(0, 360, 30))
     my_map.drawparallels(np.arange(-90, 90, 30))
     
-    # Add building locations to the plot   
-    x,y = my_map(lng,lat)
-    for index in range(len(lng)):
-        building_type = metaData[u'INDUSTRY'][index]
-        my_map.plot(x[index], y[index], ls = 'None',alpha=0.5, 
-                    marker = 'o', markerfacecolor = type_color_map[building_type],
-                    markeredgecolor = type_color_map[building_type],
-                    markersize=buiEUI_scaled[index])
+    # Add building locations to the plot 
     
+    # convert lat, lng to plot coordinates
+
+    # for each building
+        # plot to my_map.  Color the marker based on the 'INDUSTRY' and 
+        # give marker size based on the EUI calculated for that building.    
+        
     # Add weather station locations to the plot
-#    x,y = my_map(uniTmyLng, uniTmyLat)
-#    my_map.plot(x,y,'yo', markersize=5, label = 'TMY3 Weather Station')
+    x,y = my_map(uniTmyLng, uniTmyLat)
+    my_map.plot(x,y,'yo', markersize=5, label = 'TMY3 Weather Station')
     
+    #---------------------------------------------------------------------------    
     # create legend handles and labels
+    #---------------------------------------------------------------------------
+    '''
+    You most likely will be having legend issues if you labeled each building
+    as you plotted.  Now is where we fix this (or avoid adding labels prior to
+    this section).
+    '''    
     # get the existing handles
-    handles, labels = ax.get_legend_handles_labels()
+    # see matplotlib.org/users/legend_guide.html for more details
     
     # create custom handles for the building types
-    for key in type_color_map:
-        h = mlines.Line2D([],[], markersize = 5.0,
-                          marker = 'o', ls='None', markerfacecolor = type_color_map[key],
-                          markeredgecolor = type_color_map[key],
-                          label=key)
-        handles.append(h)
-        
-    # Turn on the legend in best location, adjust legend display
+    # see matplotlib.org/users/legend_guide.html for more details
+    
+    
+    # Turn on the legend in best location, adjust legend display for a single point
+    # like the final plot
     # see matplotlib.org/users/legend_guide.html for more details on HandlerLine2D class
-    plt.legend(handles=handles, frameon=False, loc=0,
-               handler_map = {type(handles[0]):HandlerLine2D(numpoints = 1)})
+
     
     # Ensure the required directory exists
     if not os.path.isdir('../../figures'):
-		os.mkdir('../../figures')
+        os.mkdir('../../figures')
     
     # Save figure
     plt.savefig('../../figures/buildingslocs-session2.png')
