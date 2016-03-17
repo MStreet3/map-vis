@@ -1,2 +1,2 @@
-*.log
+# no compiled python files, track logs
 *.pyc
