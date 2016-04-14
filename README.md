@@ -19,8 +19,7 @@ in the `solutions` directory.  All template files are located in the
 5. mpl_toolkits.basemap
 6. pandas
 
-Run similar to
-
+From the `root` directory, run via:
 
 ```
 #!cmd
