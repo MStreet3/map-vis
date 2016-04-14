@@ -23,17 +23,20 @@ in the *solutions* directory.  All template files are located in the
 
 The first session plots the locations of 100 commercial buildings and their nearest weather
 station.
+
 ![Alt Gray map of 100 commercial buildings and weather stations](https://bytebucket.org/blackmencode/bmc-core-data-vis/raw/f2e9ff12924d3e7455ee5f3b09773e8c54bfd6f3/figures/buildingslocs-session1.png)
 
 ## Session 2
 The next session features the same commercial buildings, but this time the point locations of each
 building are sized based on the annual energy use of the building.
+
 ![Alt White map of commercial buildings with points sized by energy use.](https://bytebucket.org/blackmencode/bmc-core-data-vis/raw/f2e9ff12924d3e7455ee5f3b09773e8c54bfd6f3/figures/buildingslocs-session2.png)
 
 ## Session 3
 Final session gets away from the map plotting and doesn't depend on either `geopy` or `mpl_toolits.basemap`.  
 Here we're plotting the relationship between annual energy use and conditioned floor area.  Points
 are colored by building type.
+
 ![Alt Scatter plot of buildings energy use versus conditioned floor area.](https://bytebucket.org/blackmencode/bmc-core-data-vis/raw/f2e9ff12924d3e7455ee5f3b09773e8c54bfd6f3/figures/buildingsdata-session3.png)
 
 
