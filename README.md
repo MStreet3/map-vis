@@ -19,6 +19,17 @@ in the `solutions` directory.  All template files are located in the
 5. mpl_toolkits.basemap
 6. pandas
 
+Run similar to
+
+
+```
+#!cmd
+cd solutions
+cd session-1
+python solution-session-1.py
+```
+
+
 ## Session 1
 
 The first session plots the locations of 100 commercial buildings and their nearest weather
