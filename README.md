@@ -9,8 +9,8 @@ This repo is a three part series of intermediate data visualization concepts in 
 * [Session 3](#markdown-header-session-3)
 
 Clone the repo to access templates and solution files.  File solutions are located 
-in the *solutions* directory.  All template files are located in the
-*scripts* directory.  Repo has the following dependencies:
+in the `solutions` directory.  All template files are located in the
+`scripts` directory.  Repo has the following dependencies:
 
 1. matplotlib
 2. numpy
